@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 const userSchema = new mongoose.Schema({
-    rollNumber: {
+    username: {
         type: Number,
-        required: [true, "Please provide a roll number"],
+        required: [true, "Please provide a username"],
         unique: true,
     },
     name: {
@@ -10,7 +10,7 @@ const userSchema = new mongoose.Schema({
         required: [true, "Please provide a name"],
     },
     email: {
-        type: Number,
+        type: String,
         required: [true, "Please provide a email"],
         unique: true,
     },
