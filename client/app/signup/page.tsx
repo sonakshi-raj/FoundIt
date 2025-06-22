@@ -26,7 +26,8 @@ const SignUp = () => {
         } 
         catch (error: any) {
             console.log("Sign up failed");
-            toast.error(error.message);
+            const errorMsg = error.response?.data?.error || "Something went wrong" || "User already exists"; //Not working something wrong
+            toast.error(errorMsg);
             setLoading(false);
         }
     };
