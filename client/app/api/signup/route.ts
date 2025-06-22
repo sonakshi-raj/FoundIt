@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
 
     const savedUser = await newUser.save();
     console.log({ savedUser });
-
+// add verify email feature
     return NextResponse.json({
       message: "User registered successfully",
       success: true,

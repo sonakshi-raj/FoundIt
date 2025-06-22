@@ -97,6 +97,7 @@ const Login = () => {
         </div>
     </div>
     <Toaster />
+    {/* Add forget password feature */}
 </div>
 
   );
