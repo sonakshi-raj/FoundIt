@@ -19,6 +19,7 @@ const userSchema = new mongoose.Schema({
         required: [true, "Please provide a password"],
 
     }
+    // Writing for reset password feature
 });
 const User = mongoose.models.users || mongoose.model("users", userSchema);
 export default User;
