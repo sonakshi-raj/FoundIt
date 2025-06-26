@@ -20,7 +20,7 @@ const Profile = () => {
     router.push("/profile");
   };
     const logout = async () => {
-    await axios.get("/api/users/logout");
+    await axios.get("/api/logout");
     toast.success("Logged out successfully");
     router.push("/login");
   };
