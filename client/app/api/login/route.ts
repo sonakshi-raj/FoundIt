@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import User from "@/models/userModels";
 import bcrypt from "bcryptjs";
 import { connect } from "@/DBConfig/DBConfig";
-
+import jwt from "jsonwebtoken";
 connect();
 
 export async function POST(request: NextRequest) {
@@ -28,15 +28,25 @@ export async function POST(request: NextRequest) {
       );
     }
 // Add reset password feature 
-    return NextResponse.json({
+    const tokenData = {
+      id: user._id,
+      username: user.username,
+      email: user.email,
+    };
+    const token = jwt.sign(tokenData, process.env.TOKEN_SECRET!, {
+      expiresIn: "1h",
+    });
+
+    const response = NextResponse.json({
       message: "Logged In successfully.",
       success: true,
-      user: {
-        id: user._id,
-        username: user.username,
-        email: user.email,
-      },
     });
+
+    response.cookies.set("token", token, {
+      httpOnly: true,
+    });
+
+    return response;
   }
      catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
