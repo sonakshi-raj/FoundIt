@@ -41,6 +41,19 @@ const SignUp = () => {
     );
   }, [user]);
   return (
+     <div className="min-h-screen flex flex-col bg-[#e8ecf1]">
+      <div className="h-1 w-full bg-[#ffd700]" />
+        <header className="bg-[#003a6a] h-[132px] flex items-center">
+            <div className="pl-[157px]">
+            <h2 className="text-white font-semibold text-4xl leading-snug">
+                National Institute of Technology Jalandhar
+            </h2>
+            </div>
+        </header>
+
+      <div className="bg-[#1f1f1f] text-[#ffd700] h-[51px] flex items-center pl-[157px] py-1 font-semibold text-xl">
+        | ERP - NITJ |
+      </div>
     <div className="flex flex-col items-center justify-center min-h-screen bg-[#f1f5f9] px-4">
         <div className="w-full max-w-md p-8 space-y-5 bg-white rounded-xl shadow-md border border-gray-200">
             <div className="flex flex-col items-center space-y-2">
@@ -126,6 +139,12 @@ const SignUp = () => {
     </div>
 </div>
 
+      <footer className="bg-[#003a6a]  h-[68px] py-2 flex items-center justify-center">
+        <p className="text-white text-sm text-center">
+                Copyright 2025 © NITJ Jalandhar
+        </p>
+      </footer>
+    </div>
   );
 };
 export default SignUp;
