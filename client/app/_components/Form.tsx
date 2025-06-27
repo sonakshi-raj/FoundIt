@@ -1,12 +1,11 @@
 "use client";
 
 import { useState } from "react";
-
 type formProps = {
   userId: string;
 };
 
-type LostItem = {
+type item = {
   type: string;
   title: string;
   description: string;
@@ -14,17 +13,21 @@ type LostItem = {
   dateLost: string;
   contact: string;
   createdByUser: string;
+  isFound: boolean | null;
+  isClaimed: boolean | null;
 };
 
-export default function LostForm({ userId }: formProps) {
-  const [form, setForm] = useState<LostItem>({
+export default function Form({ userId }: formProps) {
+  const [form, setForm] = useState<item>({
     type: "lost",
     title: "",
     description: "",
     location: "",
     dateLost: "",
     contact: "",
-    createdByUser: ""
+    createdByUser: "",
+    isFound: false,
+    isClaimed: null,
   });
 
   const handleChange = (
@@ -35,21 +38,24 @@ export default function LostForm({ userId }: formProps) {
 
   const handleTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, type: e.target.value });
+    if (e.target.value === "lost") {
+      setForm({ ...form, isClaimed: null, isFound: false });
+    } else {
+      setForm({ ...form, isFound: null, isClaimed: false });
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setForm(prev => {
+    setForm((prev) => {
       const updatedForm = { ...prev, createdByUser: userId };
-      console.log(updatedForm); // Move logging here after userId update
+      console.log(updatedForm);
       return updatedForm;
     });
   };
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4 p-0 m-5">
-
-      {/* Radio Buttons for Type Selection */}
       <div className="flex gap-4">
         <label>
           <input

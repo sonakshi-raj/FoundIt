@@ -1,4 +1,4 @@
-import Form from "../_components/LostForm"
+import Form from "../_components/Form"
 
 const page = () => {
   return (
