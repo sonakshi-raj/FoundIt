@@ -1,8 +1,8 @@
-import Form from "../_components/Form"
+import Form from "../_components/LostForm"
 
 const page = () => {
   return (
-    <Form action="" method="POST"/>
+    <Form userId=""/>
   )
 }
 
