@@ -1,7 +1,6 @@
 "use client"
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Link from "next/link";
 import {useRouter} from "next/navigation";
 import toast from "react-hot-toast";
 const Profile = () => {
@@ -19,6 +18,12 @@ const Profile = () => {
     const OnProfile = async () => {
     router.push("/profile");
   };
+    const OnFoundItems = async () => {
+      router.push("/foundItems");
+    };
+    const OnLostItems = async () => {
+      router.push("/foundItems");
+    };
     const logout = async () => {
     await axios.get("/api/logout");
     toast.success("Logged out successfully");
@@ -76,11 +81,15 @@ const Profile = () => {
           <span>REPORT (LOST & FOUND)</span>
         </button>
 
-        <button className="bg-[#f3f3f3] hover:bg-[#003a6a] text-black font-bold py-10 px-10 rounded-3xl shadow text-2xl flex items-center space-x-3">
+        <button 
+        onClick={OnLostItems}
+        className="bg-[#f3f3f3] hover:bg-[#003a6a] text-black font-bold py-10 px-10 rounded-3xl shadow text-2xl flex items-center space-x-3">
           <span>LOST ITEMS</span>
         </button>
 
-        <button className="bg-[#f3f3f3] hover:bg-[#003a6a] text-black font-bold py-10 px-10 rounded-3xl shadow text-2xl flex items-center space-x-3">
+        <button 
+        onClick={OnFoundItems}
+        className="bg-[#f3f3f3] hover:bg-[#003a6a] text-black font-bold py-10 px-10 rounded-3xl shadow text-2xl flex items-center space-x-3">
           <span>FOUND ITEMS</span>
         </button>
 
