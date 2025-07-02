@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-
+import Item from "@/models/itemModel"; 
 import User from "@/models/userModels";
 import { connect } from "@/DBConfig/DBConfig";
 import { getDataFromToken } from "@/helper/getDataFromToken";
-import { foundItems } from "@/helper/foundItems";
 
 connect();
 
@@ -23,8 +22,8 @@ export async function POST(request: NextRequest) {
   }
 }
 export async function GET(request: NextRequest) {
-  try {
-    const items = foundItems();
+ try {
+    const items = await Item.find({}).sort({ createdDate: -1 }); 
     return NextResponse.json({ items, status: true });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
