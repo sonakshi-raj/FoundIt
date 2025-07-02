@@ -1,10 +1,10 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const itemSchema = new mongoose.Schema(
   {
     createdBy_user_id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "users",
+      ref: "users", 
       required: true,
     },
     title: {
@@ -16,7 +16,7 @@ const itemSchema = new mongoose.Schema(
       required: true,
     },
     keywords: {
-      type: [String], 
+      type: [String],
       default: [],
     },
     priority: {
@@ -46,8 +46,9 @@ const itemSchema = new mongoose.Schema(
     },
   },
   {
-    timestamps: true, 
+    timestamps: true,
   }
 );
 
-module.exports = mongoose.model("Item", itemSchema);
+const Item = mongoose.models.item || mongoose.model("item", itemSchema);
+export default Item;
