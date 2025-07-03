@@ -44,6 +44,10 @@ const itemSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
+    is_lost: {
+      type: Boolean,
+      required: true,
+    },
   },
   {
     timestamps: true,
