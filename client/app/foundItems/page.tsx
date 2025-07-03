@@ -4,10 +4,10 @@ import axios from "axios";
 import {useRouter} from "next/navigation";
 import toast from "react-hot-toast";
 type FoundItemType = {
-  name: string;
+  title: string;
   location: string;
-  date: string;
-  imageUrl?: string;
+  createdAt: string;
+  itemPicture?: string;
 };
 const FoundItem = () => {
     const router = useRouter();
@@ -24,6 +24,9 @@ const FoundItem = () => {
     }
     const OnProfile = async () => {
     router.push("/profile");
+  };
+  const OnReport = async () => {
+    router.push("/reportForm");
   };
     const logout = async () => {
     await axios.get("/api/logout");
@@ -86,30 +89,44 @@ return (
           🔍
         </button>
       </div>
-      <button className="bg-[#003a6a] text-white px-6 py-2 rounded-lg font-semibold">
+      <button 
+      onClick={OnReport}
+      className="bg-[#003a6a] text-white px-6 py-2 rounded-lg font-semibold cursor-pointer">
         Report Found Item
       </button>
     </div>
 
     <div className="flex justify-center flex-wrap gap-8 px-[157px] pb-12">
-      {foundItems.map((item, index) => (
-        <div key={index} className="w-[250px] bg-white shadow-md rounded-md overflow-hidden">
-          <div className="bg-[#003a6a] text-white text-center py-2 font-semibold text-lg relative">
-            {item.name}
-            <span className="absolute right-2 top-2 text-red-500 font-bold">!</span>
-          </div>
-          <div className="px-4 py-2 text-center">
-            <p className="text-sm font-semibold text-gray-500">Location: {item.location}</p>
-            <p className="text-sm text-gray-500">Date: {item.date}</p>
-          </div>
-          <div className="flex justify-center py-2">
-            <button className="bg-[#003a6a] text-white px-6 py-1 rounded-full hover:bg-[#002a4d]">
-              Claim
-            </button>
-          </div>
-        </div>
-      ))}
+  {foundItems.map((item, index) => (
+    <div key={index} className="w-[250px] bg-white shadow-md rounded-md overflow-hidden">
+      
+      {item.itemPicture && (
+        <img
+          src={item.itemPicture}
+          alt={item.title}
+          className="w-full h-40 object-cover"
+        />
+      )}
+
+      <div className="bg-[#003a6a] text-white text-center py-2 font-semibold text-lg relative">
+        {item.title}
+        <span className="absolute right-2 top-2 text-red-500 font-bold">!</span>
+      </div>
+
+      <div className="px-4 py-2 text-center">
+        <p className="text-sm font-semibold text-gray-500">Location: {item.location}</p>
+        <p className="text-sm text-gray-500">
+          Date: {new Date(item.createdAt).toLocaleDateString()}
+        </p>
+      </div>
+      <div className="flex justify-center py-2">
+        <button className="bg-[#003a6a] text-white px-6 py-1 rounded-full hover:bg-[#002a4d]">
+          Claim
+        </button>
+      </div>
     </div>
+  ))}
+</div>
   </main>
 
   <footer className="bg-[#003a6a] h-[68px] py-2 flex items-center justify-center">
