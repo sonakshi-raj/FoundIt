@@ -25,7 +25,7 @@ const Profile = () => {
       router.push("/reportForm");
     };
     const OnLostItems = async () => {
-      router.push("/foundItems");
+      router.push("/lostItems");
     };
     const logout = async () => {
     await axios.get("/api/logout");

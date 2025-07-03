@@ -25,6 +25,9 @@ const LostItem = () => {
     const OnProfile = async () => {
     router.push("/profile");
   };
+  const OnReport = async () => {
+    router.push("/reportForm");
+  };
     const logout = async () => {
     await axios.get("/api/logout");
     toast.success("Logged out successfully");
@@ -86,7 +89,9 @@ return (
           🔍
         </button>
       </div>
-      <button className="bg-[#003a6a] text-white px-6 py-2 rounded-lg font-semibold">
+      <button 
+      onClick={OnReport}
+      className="bg-[#003a6a] text-white px-6 py-2 rounded-lg font-semibold cursor-pointer">
         Report Lost Item
       </button>
     </div>
