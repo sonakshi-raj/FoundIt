@@ -24,7 +24,8 @@ export async function POST(request: NextRequest) {
 }
 export async function GET(request: NextRequest) {
   try {
-    const items = await Item.find({ is_lost: true }).sort({ createdAt: -1 }).lean();
+    
+    const items = await Item.find({ is_lost: true }).sort({ createdDate: -1 });
     return NextResponse.json({ items, status: true });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });

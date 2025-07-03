@@ -38,7 +38,7 @@ const LostItem = () => {
   
   const fetchItems = async () => {
     try {
-      const res = await axios.get("/api/foundItems");
+      const res = await axios.get("/api/lostItems");
       setFoundItems(res.data.items);
     } catch (err) {
       toast.error("Failed to load found items");

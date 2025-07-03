@@ -1,4 +1,4 @@
-// ✅ BACKEND ROUTE: app/api/reportForm/route.ts
+
 import { NextRequest, NextResponse } from "next/server";
 import { connect } from "@/DBConfig/DBConfig";
 import { getDataFromToken } from "@/helper/getDataFromToken";
@@ -38,7 +38,6 @@ export async function POST(req: NextRequest) {
       const buffer = Buffer.from(bytes);
       const uploadDir = path.join(process.cwd(), "public/uploads");
 
-      // Ensure the directory exists
       if (!fs.existsSync(uploadDir)) {
         fs.mkdirSync(uploadDir, { recursive: true });
       }
