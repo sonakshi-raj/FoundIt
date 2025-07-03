@@ -21,6 +21,9 @@ const Profile = () => {
     const OnFoundItems = async () => {
       router.push("/foundItems");
     };
+    const OnReportForm = async () => {
+      router.push("/reportForm");
+    };
     const OnLostItems = async () => {
       router.push("/foundItems");
     };
@@ -41,14 +44,14 @@ const Profile = () => {
   <header className="bg-[#003a6a] h-[132px] flex items-center">
     <div className="pl-[157px]">
       <h2 className="text-white font-semibold text-4xl leading-snug">
-        National Institute of Technology Jalandhar
+        FoundIt
       </h2>
     </div>
   </header>
 
   <div className="bg-[#1f1f1f] text-[#ffd700] h-[51px] flex items-center justify-between px-6 font-semibold text-base pl-[157px]">
     <div className="flex items-center space-x-6">
-      <span className="text-[#ffd700] font-bold text-lg">| ERP - NITJ |</span>
+      <span className="text-[#ffd700] font-bold text-lg">| ERP |</span>
       <div className="flex items-center space-x-4 text-gray-300 font-normal">
         <button
           onClick={OnProfile}
@@ -77,7 +80,9 @@ const Profile = () => {
     <div className="flex flex-col items-center ">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
 
-        <button className="bg-[#f3f3f3] hover:bg-[#003a6a] text-black font-bold py-10 px-10 rounded-3xl shadow text-2xl flex items-center space-x-3">
+        <button 
+        onClick={OnReportForm}
+        className="bg-[#f3f3f3] hover:bg-[#003a6a] text-black font-bold py-10 px-10 rounded-3xl shadow text-2xl flex items-center space-x-3">
           <span>REPORT (LOST & FOUND)</span>
         </button>
 
@@ -106,7 +111,7 @@ const Profile = () => {
 
   <footer className="bg-[#003a6a] h-[68px] py-2 flex items-center justify-center">
     <p className="text-white text-sm text-center">
-      Copyright 2025 © NITJ Jalandhar
+      Copyright 2025 © FoundIt
     </p>
   </footer>
 </div>
