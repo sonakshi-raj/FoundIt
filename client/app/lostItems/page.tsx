@@ -33,6 +33,14 @@ const LostItem = () => {
     toast.success("Logged out successfully");
     router.push("/login");
   };
+  const handleReportSpam = async (itemId: string) => {
+  try {
+    const res = await axios.post("/api/reportSpam", { itemId });
+    toast.success("Item reported as spam!");
+  } catch (err) {
+    toast.error("Failed to report spam");
+  }
+};
     useEffect(() => {
   getUserDetails();
   
@@ -53,14 +61,14 @@ return (
   <header className="bg-[#003a6a] h-[132px] flex items-center">
     <div className="pl-[157px]">
       <h2 className="text-white font-semibold text-4xl leading-snug">
-        National Institute of Technology Jalandhar
+        FoundIt
       </h2>
     </div>
   </header>
 
   <div className="bg-[#1f1f1f] text-[#ffd700] h-[51px] flex items-center justify-between px-6 font-semibold text-base pl-[157px]">
     <div className="flex items-center space-x-6">
-      <span className="text-[#ffd700] font-bold text-lg">| ERP - NITJ |</span>
+      <span className="text-[#ffd700] font-bold text-lg">| ERP |</span>
       <div className="flex items-center space-x-4 text-gray-300 font-normal">
         <button onClick={OnProfile} className="hover:text-white cursor-pointer">
           Home
@@ -98,8 +106,10 @@ return (
 
 <div className="flex justify-center flex-wrap gap-8 px-[157px] pb-12">
   {foundItems.map((item, index) => (
-    <div key={index} className="w-[250px] bg-white shadow-md rounded-md overflow-hidden">
-      
+    <div
+      key={index}
+      className="w-[250px] bg-white shadow-md rounded-lg overflow-hidden border border-gray-200"
+    >
       {item.itemPicture && (
         <img
           src={item.itemPicture}
@@ -108,18 +118,27 @@ return (
         />
       )}
 
-      <div className="bg-[#003a6a] text-white text-center py-2 font-semibold text-lg relative">
-        {item.title}
-        <span className="absolute right-2 top-2 text-red-500 font-bold">!</span>
+      <div className="flex items-center justify-between bg-[#003a6a] text-white px-4 py-2">
+        <h3 className="text-lg font-semibold truncate">{item.title}</h3>
+        <button
+          className="bg-red-600 hover:bg-red-700 text-white text-xs px-2 py-1 rounded-md shadow-sm cursor-pointer"
+          onClick={() => handleReportSpam(item.title)}
+          title="Report this item as spam"
+        >
+          SPAM?
+        </button>
       </div>
 
       <div className="px-4 py-2 text-center">
-        <p className="text-sm font-semibold text-gray-500">Location: {item.location}</p>
+        <p className="text-sm font-semibold text-gray-600">
+          Location: {item.location}
+        </p>
         <p className="text-sm text-gray-500">
           Date: {new Date(item.createdAt).toLocaleDateString()}
         </p>
       </div>
-      <div className="flex justify-center py-2">
+
+      <div className="flex justify-center py-3">
         <button className="bg-[#003a6a] text-white px-6 py-1 rounded-full hover:bg-[#002a4d]">
           Claim
         </button>
@@ -127,11 +146,12 @@ return (
     </div>
   ))}
 </div>
+
   </main>
 
   <footer className="bg-[#003a6a] h-[68px] py-2 flex items-center justify-center">
     <p className="text-white text-sm text-center">
-      Copyright 2025 © NITJ Jalandhar
+      Copyright 2025 © FoundIt
     </p>
   </footer>
 </div>
