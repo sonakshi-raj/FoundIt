@@ -23,7 +23,10 @@ export async function POST(request: NextRequest) {
 }
 export async function GET(request: NextRequest) {
   try {
-    const items = await Item.find({ is_lost: false }).sort({ createdDate: -1 });
+    const items = await Item.find({ is_lost: false, $or: [
+    { is_spam: false },
+    { is_spam: { $exists: false } }
+  ] }).sort({ createdDate: -1 });
     return NextResponse.json({ items, status: true });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });

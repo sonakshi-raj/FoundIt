@@ -5,15 +5,21 @@ import axios from "axios";
 import {useRouter} from "next/navigation";
 import toast from "react-hot-toast";
 type FoundItemType = {
+  _id: string;
   title: string;
   location: string;
   createdAt: string;
   itemPicture?: string;
+  createdBy_user_id: string;
 };
 const FoundItem = () => {
     const router = useRouter();
     const [user, setUser] = useState({ name: "", username: "" });
     const [foundItems, setFoundItems] = useState<FoundItemType[]>([]);
+    const [showModal, setShowModal] = useState(false);
+    const [reportReason, setReportReason] = useState("");
+    const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
+    const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
     const getUserDetails = async () => {
         try{
             const response = await axios.post("/api/foundItems");
@@ -34,10 +40,25 @@ const FoundItem = () => {
     toast.success("Logged out successfully");
     router.push("/login");
   };
-    useEffect(() => {
-  getUserDetails();
-  
-  const fetchItems = async () => {
+  const handleReportSpam = async (itemId: string, toUserId: string) => {
+  try {
+    const res = await axios.post("/api/reportSpam", {
+      itemId,
+      toUserId,
+      reportReason,
+    });
+
+    if (res.status === 200) {
+      toast.success("Item reported as spam!");
+      fetchItems();
+    }
+  } catch (err: any) {
+    toast.error("Failed to report spam");
+    console.error(err);
+  }
+};
+
+const fetchItems = async () => {
     try {
       const res = await axios.get("/api/foundItems");
       setFoundItems(res.data.items);
@@ -45,7 +66,8 @@ const FoundItem = () => {
       toast.error("Failed to load found items");
     }
   };
-
+    useEffect(() => {
+  getUserDetails();
   fetchItems();
 }, []);
 return (
@@ -54,14 +76,14 @@ return (
   <header className="bg-[#003a6a] h-[132px] flex items-center">
     <div className="pl-[157px]">
       <h2 className="text-white font-semibold text-4xl leading-snug">
-        National Institute of Technology Jalandhar
+        FoundIt
       </h2>
     </div>
   </header>
 
   <div className="bg-[#1f1f1f] text-[#ffd700] h-[51px] flex items-center justify-between px-6 font-semibold text-base pl-[157px]">
     <div className="flex items-center space-x-6">
-      <span className="text-[#ffd700] font-bold text-lg">| ERP - NITJ |</span>
+      <span className="text-[#ffd700] font-bold text-lg">| ERP |</span>
       <div className="flex items-center space-x-4 text-gray-300 font-normal">
         <button onClick={OnProfile} className="hover:text-white cursor-pointer">
           Home
@@ -96,6 +118,45 @@ return (
         Report Found Item
       </button>
     </div>
+    {showModal && (
+    <div className="fixed inset-0 bg-white/30 backdrop-blur-sm flex items-center justify-center z-50">
+     <div className="bg-white p-6 rounded-lg shadow-lg w-[90%] max-w-md">
+       <h2 className="text-lg font-bold mb-4 text-center text-red-600">Report Item as Spam</h2>
+      
+       <textarea
+         value={reportReason}
+         onChange={(e) => setReportReason(e.target.value)}
+         placeholder="Write reason (e.g. fake item, inappropriate, etc)"
+         className="w-full border border-gray-300 p-2 rounded-md mb-4 text-gray-500"
+         rows={4}
+       />
+
+        <div className="flex justify-end gap-4">
+          <button
+          className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded"
+          onClick={() => {
+            setShowModal(false);
+            setReportReason("");
+            }}
+          >
+          Cancel
+          </button>
+          <button
+            className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded"
+            onClick={() => {
+              if (selectedItemId && selectedUserId) {
+                handleReportSpam(selectedItemId, selectedUserId);
+                setShowModal(false);
+                setReportReason("");
+              }
+            }}
+          >
+            Submit
+          </button>
+        </div>
+        </div>
+      </div>
+  )}
 
     <div className="flex justify-center flex-wrap gap-8 px-[157px] pb-12">
   {foundItems.map((item, index) => (
@@ -109,18 +170,32 @@ return (
         />
       )}
 
-      <div className="bg-[#003a6a] text-white text-center py-2 font-semibold text-lg relative">
-        {item.title}
-        <span className="absolute right-2 top-2 text-red-500 font-bold">!</span>
+      <div className="flex items-center justify-between bg-[#003a6a] text-white px-4 py-2">
+        <h3 className="text-lg font-semibold truncate">{item.title}</h3>
+        <button
+          className="bg-red-600 hover:bg-red-700 text-white text-xs px-2 py-1 rounded-md shadow-sm cursor-pointer"
+          onClick={() => {
+          setSelectedItemId(item._id);
+          setSelectedUserId(item.createdBy_user_id);
+          setShowModal(true);
+        }}
+          title="Report this item as spam"
+        >
+        SPAM?
+          </button>
+
       </div>
 
       <div className="px-4 py-2 text-center">
-        <p className="text-sm font-semibold text-gray-500">Location: {item.location}</p>
+        <p className="text-sm font-semibold text-gray-600">
+          Location: {item.location}
+        </p>
         <p className="text-sm text-gray-500">
           Date: {new Date(item.createdAt).toLocaleDateString()}
         </p>
       </div>
-      <div className="flex justify-center py-2">
+
+      <div className="flex justify-center py-3">
         <button className="bg-[#003a6a] text-white px-6 py-1 rounded-full hover:bg-[#002a4d]">
           Claim
         </button>
@@ -132,7 +207,7 @@ return (
 
   <footer className="bg-[#003a6a] h-[68px] py-2 flex items-center justify-center">
     <p className="text-white text-sm text-center">
-      Copyright 2025 © NITJ Jalandhar
+      Copyright 2025 © FoundIt
     </p>
   </footer>
 </div>
