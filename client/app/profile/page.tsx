@@ -18,6 +18,12 @@ const Profile = () => {
     const OnProfile = async () => {
     router.push("/profile");
   };
+    const OnMyPosts = async () => {
+      router.push("/myposts");
+    };
+    const OnClaims = async () => {
+      router.push("claims");
+    };
     const OnFoundItems = async () => {
       router.push("/foundItems");
     };
@@ -98,11 +104,15 @@ const Profile = () => {
           <span>FOUND ITEMS</span>
         </button>
 
-        <button className="bg-[#f3f3f3] hover:bg-[#003a6a] text-black font-bold py-10 px-10 rounded-3xl shadow text-2xl flex items-center space-x-3 md:col-span-2 lg:col-span-1">
+        <button 
+        onClick={OnMyPosts}
+        className="bg-[#f3f3f3] hover:bg-[#003a6a] text-black font-bold py-10 px-10 rounded-3xl shadow text-2xl flex items-center space-x-3 md:col-span-2 lg:col-span-1">
           <span>My Posts</span>
         </button>
 
-        <button className="bg-[#f3f3f3] hover:bg-[#003a6a] text-black font-bold py-10 px-10 rounded-3xl shadow text-2xl flex items-center space-x-3 md:col-span-2 lg:col-span-1">
+        <button 
+        onClick={OnClaims}
+        className="bg-[#f3f3f3] hover:bg-[#003a6a] text-black font-bold py-10 px-10 rounded-3xl shadow text-2xl flex items-center space-x-3 md:col-span-2 lg:col-span-1">
           <span>CLAIMS</span>
         </button>
       </div>
