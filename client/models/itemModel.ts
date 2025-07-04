@@ -48,6 +48,10 @@ const itemSchema = new mongoose.Schema(
       type: Boolean,
       required: true,
     },
+    is_spam: {
+    type: Boolean,
+    default: false,
+    },
   },
   {
     timestamps: true,
