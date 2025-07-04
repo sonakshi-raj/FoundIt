@@ -15,6 +15,11 @@ const LostItem = () => {
     const router = useRouter();
     const [user, setUser] = useState({ name: "", username: "" });
     const [foundItems, setFoundItems] = useState<FoundItemType[]>([]);
+    const [showModal, setShowModal] = useState(false);
+    const [reportReason, setReportReason] = useState("");
+    const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
+    const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+
     const getUserDetails = async () => {
         try{
             const response = await axios.post("/api/lostItems");
@@ -40,7 +45,7 @@ const LostItem = () => {
     const res = await axios.post("/api/reportSpam", {
       itemId,
       toUserId,
-      reportReason: "Spam or inappropriate content", 
+      reportReason,
     });
 
     if (res.status === 200) {
@@ -112,6 +117,45 @@ return (
         Report Lost Item
       </button>
     </div>
+    {showModal && (
+    <div className="fixed inset-0 bg-white/30 backdrop-blur-sm flex items-center justify-center z-50">
+     <div className="bg-white p-6 rounded-lg shadow-lg w-[90%] max-w-md">
+       <h2 className="text-lg font-bold mb-4 text-center text-red-600">Report Item as Spam</h2>
+      
+       <textarea
+         value={reportReason}
+         onChange={(e) => setReportReason(e.target.value)}
+         placeholder="Write reason (e.g. fake item, inappropriate, etc)"
+         className="w-full border border-gray-300 p-2 rounded-md mb-4 text-gray-500"
+         rows={4}
+       />
+
+        <div className="flex justify-end gap-4">
+          <button
+          className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded"
+          onClick={() => {
+            setShowModal(false);
+            setReportReason("");
+            }}
+          >
+          Cancel
+          </button>
+          <button
+            className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded"
+            onClick={() => {
+              if (selectedItemId && selectedUserId) {
+                handleReportSpam(selectedItemId, selectedUserId);
+                setShowModal(false);
+                setReportReason("");
+              }
+            }}
+          >
+            Submit
+          </button>
+        </div>
+        </div>
+      </div>
+  )}
 
 <div className="flex justify-center flex-wrap gap-8 px-[157px] pb-12">
   {foundItems.map((item, index) => (
@@ -131,11 +175,16 @@ return (
         <h3 className="text-lg font-semibold truncate">{item.title}</h3>
         <button
           className="bg-red-600 hover:bg-red-700 text-white text-xs px-2 py-1 rounded-md shadow-sm cursor-pointer"
-          onClick={() => handleReportSpam(item._id, item.createdBy_user_id)}
+          onClick={() => {
+          setSelectedItemId(item._id);
+          setSelectedUserId(item.createdBy_user_id);
+          setShowModal(true);
+        }}
           title="Report this item as spam"
         >
-          SPAM?
-        </button>
+        SPAM?
+          </button>
+
       </div>
 
       <div className="px-4 py-2 text-center">
