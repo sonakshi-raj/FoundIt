@@ -4,10 +4,12 @@ import axios from "axios";
 import {useRouter} from "next/navigation";
 import toast from "react-hot-toast";
 type FoundItemType = {
+  _id: string;
   title: string;
   location: string;
   createdAt: string;
   itemPicture?: string;
+  createdBy_user_id: string;
 };
 const LostItem = () => {
     const router = useRouter();
@@ -33,17 +35,23 @@ const LostItem = () => {
     toast.success("Logged out successfully");
     router.push("/login");
   };
-  const handleReportSpam = async (itemId: string) => {
+  const handleReportSpam = async (itemId: string, toUserId: string) => {
   try {
-    const res = await axios.post("/api/reportSpam", { itemId });
-    toast.success("Item reported as spam!");
-  } catch (err) {
+    const res = await axios.post("/api/reportSpam", {
+      itemId,
+      toUserId,
+      reportReason: "Spam or inappropriate content", 
+    });
+
+    if (res.status === 200) {
+      toast.success("Item reported as spam!");
+      fetchItems();
+    }
+  } catch (err: any) {
     toast.error("Failed to report spam");
+    console.error(err);
   }
 };
-    useEffect(() => {
-  getUserDetails();
-  
   const fetchItems = async () => {
     try {
       const res = await axios.get("/api/lostItems");
@@ -52,9 +60,10 @@ const LostItem = () => {
       toast.error("Failed to load found items");
     }
   };
-
-  fetchItems();
-}, []);
+    useEffect(() => {
+      getUserDetails();
+      fetchItems();
+    }, []);
 return (
 <div className="flex flex-col min-h-screen bg-[#e8ecf1]">
   <div className="h-1 w-full bg-[#ffd700]" />
@@ -122,7 +131,7 @@ return (
         <h3 className="text-lg font-semibold truncate">{item.title}</h3>
         <button
           className="bg-red-600 hover:bg-red-700 text-white text-xs px-2 py-1 rounded-md shadow-sm cursor-pointer"
-          onClick={() => handleReportSpam(item.title)}
+          onClick={() => handleReportSpam(item._id, item.createdBy_user_id)}
           title="Report this item as spam"
         >
           SPAM?
