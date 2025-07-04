@@ -19,7 +19,13 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-
+    if (user.isBlocked) {
+      console.log("Blocked user tried to log in:", username);
+      return NextResponse.json(
+        { error: "This account has been blocked." },
+        { status: 403 }
+      );
+    }
     const isValidPassword = await bcrypt.compare(password, user.password);
     if (!isValidPassword) {
       return NextResponse.json(

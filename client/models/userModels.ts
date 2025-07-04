@@ -18,7 +18,11 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: [true, "Please provide a password"],
 
-    }
+    },
+    isBlocked: {
+    type: Boolean,
+    default: false,
+  }
     // Writing for reset password feature and email verification
 });
 const User = mongoose.models.users || mongoose.model("users", userSchema);

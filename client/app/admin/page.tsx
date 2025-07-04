@@ -48,7 +48,7 @@ const AdminPage = () => {
 
   const handleDelete = async (itemId: string, userId: string) => {
     try {
-      await axios.post("/api/admin/reports/delete", { itemId, userId });
+      await axios.post("/api/admin/delete", { itemId, userId });
       toast.success("Item deleted and user blocked");
       fetchReports();
     } catch {
