@@ -1,8 +1,7 @@
 import mongoose from "mongoose";
 
-const claimSchema = new mongoose.Schema(
-  {
-    itemId: {
+const claimSchema = new mongoose.Schema({
+  itemId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Item",
     required: true,
@@ -21,13 +20,7 @@ const claimSchema = new mongoose.Schema(
     enum: ["pending", "accepted", "rejected"],
     default: "pending",
   },
-    createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-  },
-  { timestamps: true }
-);
+});
+const Claim = mongoose.models.Claim || mongoose.model("Claim", claimSchema);
 
-const Claim = mongoose.models.claims || mongoose.model("claims", claimSchema);
 export default Claim;

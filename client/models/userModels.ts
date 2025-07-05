@@ -25,5 +25,5 @@ const userSchema = new mongoose.Schema({
   }
     // Writing for reset password feature and email verification
 });
-const User = mongoose.models.users || mongoose.model("users", userSchema);
+const User = mongoose.models.User || mongoose.model("User", userSchema);
 export default User;
