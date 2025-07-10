@@ -17,16 +17,17 @@ export async function POST(req: NextRequest) {
 
     item.is_spam = true;
     await item.save();
-
+    console.log("Incoming report:", { userId, toUserId, itemId, reportReason });
     const report = await Report.create({
       fromUserId: userId,
       toUserId,
       itemId,
-      reportReason,
+      reason: reportReason,
     });
-
+    console.log("Report created:", report._id);
     return NextResponse.json({ message: "Reported successfully", report });
   } catch (err: any) {
+     console.error("❌ Error in /api/reportSpam:", err); 
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }

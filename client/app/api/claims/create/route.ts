@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { connect } from "@/DBConfig/DBConfig";
 import Claim from "@/models/claimModel";
 import { getDataFromToken } from "@/helper/getDataFromToken";
-import "@/models/userModel"; 
+import "@/models/userModels"; 
 
 
 connect();

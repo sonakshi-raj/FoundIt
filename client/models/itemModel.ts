@@ -4,7 +4,7 @@ const itemSchema = new mongoose.Schema(
   {
     createdBy_user_id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "users", 
+      ref: "User", 
       required: true,
     },
     title: {
@@ -58,5 +58,5 @@ const itemSchema = new mongoose.Schema(
   }
 );
 
-const Item = mongoose.models.item || mongoose.model("item", itemSchema);
+const Item = mongoose.models.Item || mongoose.model("Item", itemSchema);
 export default Item;

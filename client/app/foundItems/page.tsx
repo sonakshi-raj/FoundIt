@@ -11,15 +11,21 @@ type FoundItemType = {
   createdAt: string;
   itemPicture?: string;
   createdBy_user_id: string;
+  uniqueQuestion: string;
 };
 const FoundItem = () => {
     const router = useRouter();
     const [user, setUser] = useState({ name: "", username: "" });
     const [foundItems, setFoundItems] = useState<FoundItemType[]>([]);
     const [showModal, setShowModal] = useState(false);
+    const [userClaims, setUserClaims] = useState<{ [key: string]: string }>({});
     const [reportReason, setReportReason] = useState("");
     const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
     const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+    const [showClaimModal, setShowClaimModal] = useState(false);
+    const [claimAnswer, setClaimAnswer] = useState("");
+    const [claimQuestion, setClaimQuestion] = useState("");
+    const [claimItemId, setClaimItemId] = useState<string | null>(null);
     const getUserDetails = async () => {
         try{
             const response = await axios.post("/api/foundItems");
@@ -28,7 +34,22 @@ const FoundItem = () => {
         } catch (error: any){
             toast.error(error.message);
         }
-    }
+    };
+    const fetchMyClaims = async () => {
+  try {
+    const res = await axios.get("/api/claims/myclaims");
+    const claims = res.data.claims;
+
+    const claimMap: { [key: string]: string } = {};
+    claims.forEach((claim: any) => {
+      claimMap[claim.itemId] = claim.status;
+    });
+
+    setUserClaims(claimMap);
+  } catch (err) {
+    toast.error("Failed to load your claims");
+  }
+};
     const OnProfile = async () => {
     router.push("/profile");
   };
@@ -57,6 +78,38 @@ const FoundItem = () => {
     console.error(err);
   }
 };
+
+const handleClaimSubmit = async () => {
+    if (!claimItemId || !claimAnswer.trim()) {
+      toast.error("Answer cannot be empty");
+      return;
+    }
+
+    try {
+      const res = await axios.post("/api/claims/create", {
+        itemId: claimItemId,
+        uniqueAnswer: claimAnswer.trim(),
+      });
+
+      if (res.status === 201 || res.status === 200) {
+        toast.success("Claim submitted successfully!");
+        setShowClaimModal(false);
+        setClaimAnswer("");
+        setClaimItemId(null);
+        setClaimQuestion("");
+        fetchMyClaims();
+      }
+    } catch (error: any) {
+      toast.error(error.response?.data?.error || "Failed to submit claim");
+    }
+  };
+
+  useEffect(() => {
+    getUserDetails();
+    fetchItems();
+    fetchMyClaims();
+  }, []);
+
 
 const fetchItems = async () => {
     try {
@@ -118,6 +171,41 @@ return (
         Report Found Item
       </button>
     </div>
+            {showClaimModal && (
+          <div className="fixed inset-0 bg-white/30 backdrop-blur-sm flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-[90%] max-w-md">
+              <h2 className="text-lg font-bold mb-4 text-center text-blue-700">Claim This Item</h2>
+              <p className="mb-2 font-medium text-gray-700">{claimQuestion}</p>
+              <textarea
+                value={claimAnswer}
+                onChange={(e) => setClaimAnswer(e.target.value)}
+                placeholder="Enter your answer here"
+                className="w-full border border-gray-300 p-2 rounded-md mb-4 text-gray-600"
+                rows={4}
+              />
+              <div className="flex justify-end gap-4">
+                <button
+                  className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded"
+                  onClick={() => {
+                    setShowClaimModal(false);
+                    setClaimAnswer("");
+                    setClaimItemId(null);
+                    setClaimQuestion("");
+                  }}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+                  onClick={handleClaimSubmit}
+                >
+                  Submit
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
     {showModal && (
     <div className="fixed inset-0 bg-white/30 backdrop-blur-sm flex items-center justify-center z-50">
      <div className="bg-white p-6 rounded-lg shadow-lg w-[90%] max-w-md">
@@ -195,13 +283,32 @@ return (
         </p>
       </div>
 
-      <div className="flex justify-center py-3">
-        <button className="bg-[#003a6a] text-white px-6 py-1 rounded-full hover:bg-[#002a4d]">
-          Claim
-        </button>
-      </div>
-    </div>
-  ))}
+              <div className="flex justify-center py-3">
+  {userClaims[item._id] ? (
+  <div className={`text-xs text-center ${
+    userClaims[item._id] === "pending" ? "text-yellow-600" :
+    userClaims[item._id] === "accepted" ? "text-green-600" :
+    "text-red-600"
+  }`}>
+    Claim Status: <span className="font-semibold">{userClaims[item._id]}</span>
+  </div>
+) : (
+  <button
+    onClick={() => {
+      setClaimItemId(item._id);
+      setClaimQuestion(item.uniqueQuestion);
+      setShowClaimModal(true);
+    }}
+    className="bg-[#003a6a] text-white px-6 py-1 rounded-full hover:bg-[#002a4d]"
+  >
+    Claim
+  </button>
+)}
+
+</div>
+
+            </div>
+          ))}
 </div>
   </main>
 

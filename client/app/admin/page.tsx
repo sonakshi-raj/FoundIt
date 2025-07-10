@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 
 type ReportType = {
   _id: string;
-  reportReason: string;
+  reason: string;
   itemId: {
     _id: string;
     title: string;
@@ -103,7 +103,9 @@ const AdminPage = () => {
                   className="w-full h-40 object-cover"
                 />
               )}
-
+              {reports.length === 0 && (
+  <p className="text-center text-gray-600">No unresolved reports found.</p>
+)}
               <div className="p-4">
                 <h3 className="text-xl font-semibold">
                   {report.itemId.title}
@@ -112,7 +114,7 @@ const AdminPage = () => {
                   Reported by: {report.fromUserId.username}
                 </p>
                 <p className="text-gray-500 text-sm">
-                  Reason: {report.reportReason}
+                  Reason: {report.reason}
                 </p>
                 <p className="text-gray-500 text-sm">
                   Location: {report.itemId.location}
