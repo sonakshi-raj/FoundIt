@@ -1,10 +1,9 @@
 import sampleItems from "../api/lost";
 
 const lostitems = () => {
-    
-  return <>
-    
-  </>;
+  console.log(sampleItems);
+
+  return <></>;
 };
 
 export default lostitems;
